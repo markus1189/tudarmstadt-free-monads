@@ -1,0 +1,168 @@
+\documentclass{beamer}
+
+\usepackage{minted}
+
+\usetheme{codecentric}
+
+\author{Markus Hauck}
+\institute{codecentric AG}
+
+\title{Warm fluffy Interpreters}
+
+\begin{document}
+{
+  \usebackgroundtemplate{\includegraphics[width=\paperwidth,height=\paperheight]{background.png}}
+  \begin{frame}[plain,noframenumbering]
+    \titlepage{}
+  \end{frame}
+}
+
+\begin{frame}
+  \tableofcontents
+\end{frame}
+
+
+\section{Introduction}
+
+\begin{frame}
+  \frametitle{The codecentric beamer theme}
+  \begin{itemize}
+  \item this is a template for LaTeX beamer
+  \item can be used to get started with a presentation
+  \item the theme mimics codecentric style
+  \item prs welcome!
+  \end{itemize}
+  \begin{enumerate}
+  \item one
+  \item two
+  \item three
+  \end{enumerate}
+\end{frame}
+
+\section{Typeclasses}
+
+\begin{frame}
+  \frametitle{Typeclasses}
+  \begin{itemize}
+  \item Design pattern coming from Haskell
+  \item Another form of ad-hoc polymorphism (Quiz?)
+  \item Can be encoded in Scala
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Typeclasses in Scala}
+  \begin{enumerate}
+  \item trait with at least one type parameter defining the available
+    methods
+  \item implicit value/def on supported types that define the
+    behaviour
+  \item syntactic sugar via implicit class
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{The Monoid Typeclass: Trait}
+\begin{minted}{scala}
+trait Monoid[A] {
+  def empty: A
+  def combine(lhs: A, rhs: A): A
+}
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{The Monoid Typeclass: Instance}
+\begin{minted}{scala}
+object Monoid {
+  def apply[A:Monoid]: Monoid[A] = implicitly
+
+  implicit val plusMonoid: Monoid[Int] = new Monoid {
+    def empty: Int = 0
+    def combine(lhs: Int, rhs: Int): Int = 0
+  }
+}
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{The Monoid Typeclass: Sugar}
+\begin{minted}{scala}
+implicit class MonoidOps[A](self: A)(
+  implicit M: Monoid[A]
+) {
+  def |+|(that: A): A = M.combine(self,that)
+}
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{The Monoid Typeclass: Usage}
+\begin{minted}{scala}
+scala> import Monoid._
+scala> 1 |+| 2
+res0: Int = 3
+scala> Monoid[Int].empty
+res1: Int = 0
+scala> Monoid[Int].empty |+| 42
+res2: Int = 42
+\end{minted}
+\end{frame}
+
+\section{Monads}
+
+\begin{frame}
+  \frametitle{Monads}
+  \begin{quote}
+    Simon Peyton Jones once commented that the biggest mistake
+    Haskell made was to call them ``monads'' instead of ``warm, fluffy
+    things''.
+  \end{quote}
+\end{frame}
+
+\section{Free Monads \& Interpreters}
+
+\begin{frame}
+  \frametitle{Free Monads}
+  \begin{itemize}
+  \item<1> Idea: strip away any semantics, only keep the AST
+  \item<1> Quiz: what nodes do we have for monads? (what operations?)
+  \item<2> pure \& flatMap
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Essence of Free Monads}
+  \begin{itemize}
+  \item build the AST via normal map/flatMap/pure operations
+  \item \textbf{interpret} the resulting program via interpreter
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Applying Free Monads}
+  \begin{itemize}
+  \item Szenario: Our program interacts with Database
+  \item for testing we want to stub it
+  \item existing solutions: embedded version, in-memory etc.
+  \item but: in some cases still undesirable:
+    \begin{itemize}
+    \item embedded version requires substantial setup time
+    \item makes parallel running tests very resource intensive
+    \end{itemize}
+  \item better: base your operations on free monads, use different
+    interpreters for production and test
+  \end{itemize}
+\end{frame}
+
+\section{Conclusion}
+
+\begin{frame}
+  \frametitle{Conclusion}
+  \begin{description}
+  \item[First description] This concludes the example presentation
+  \item[Second description] Go forth and create beautiful presentations!
+  \end{description}
+\end{frame}
+
+\end{document}
