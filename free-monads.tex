@@ -143,16 +143,28 @@ res2: Int = 42
   \frametitle{Applying Free Monads}
   \begin{itemize}
   \item Szenario: Our program interacts with Database
-  \item for testing we want to stub it
-  \item existing solutions: embedded version, in-memory etc.
-  \item but: in some cases still undesirable:
+  \item<1> for testing we want to stub it
+  \item<1> existing solutions: embedded version, in-memory etc.
+  \item<2> in some cases still undesirable:
     \begin{itemize}
     \item embedded version requires substantial setup time
     \item makes parallel running tests very resource intensive
     \end{itemize}
-  \item better: base your operations on free monads, use different
+  \item<2> better: base your operations on free monads, use different
     interpreters for production and test
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Our Program}
+\begin{minted}{scala}
+def addItem(itemId: ItemId, uid: UserId) = for {
+  item <- loadItem(itemId)
+  cart <- loadCart(uid)
+  newCart = cart.add(item)
+  r <- saveCart(newCart)
+} yield r
+\end{minted}
 \end{frame}
 
 \section{Conclusion}
