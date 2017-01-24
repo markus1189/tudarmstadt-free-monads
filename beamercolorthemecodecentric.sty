@@ -10,22 +10,22 @@
 
 \mode<presentation>
 
-\definecolor{codecentric@blue}{RGB}{39,177,177} % use structure theme to change
-\definecolor{codecentric@green}{RGB}{129,191,118} % use structure theme to change
+\definecolor{beamer@ccblue}{RGB}{39,177,177} % use structure theme to change
+\definecolor{beamer@ccgreen}{RGB}{129,191,118} % use structure theme to change
 
-\setbeamercolor{normal text}{fg=white}
-\setbeamercolor{alerted text}{fg=red!60}
-\setbeamercolor{example text}{fg=codecentric@green}
+\setbeamercolor{normal text}{fg=white,bg=black}
+\setbeamercolor{alerted text}{fg=red}
+\setbeamercolor{example text}{fg=green!50!black}
 
 \setbeamercolor{structure}{fg=white}
 
 \setbeamercolor{background canvas}{bg=black!90}
 \setbeamercolor{background}{parent=background canvas}
 
-\setbeamercolor{palette primary}{fg=codecentric@blue}
-\setbeamercolor{palette secondary}{fg=codecentric@blue}
-\setbeamercolor{palette tertiary}{fg=codecentric@green}
-\setbeamercolor{palette quaternary}{fg=codecentric@green}
+\setbeamercolor{palette primary}{fg=beamer@ccblue}
+\setbeamercolor{palette secondary}{fg=beamer@ccblue}
+\setbeamercolor{palette tertiary}{fg=beamer@ccgreen}
+\setbeamercolor{palette quaternary}{fg=beamer@ccgreen}
 
 \setbeamercolor{palette sidebar primary}{use=normal text,fg=normal text.fg}
 \setbeamercolor{palette sidebar secondary}{use=structure,fg=structure.fg}
@@ -115,12 +115,12 @@
 \setbeamercolor{navigation symbols dimmed}{use=structure,fg=structure.fg!20!bg}
 \setbeamercolor{mini frame}{parent=section in head/foot}
 
-\setbeamercolor{block body}{parent=normal text,bg=black}
-\setbeamercolor{block body alerted}{parent=alerted text,bg=black}
-\setbeamercolor{block body example}{parent=example text,bg=black}
-\setbeamercolor{block title}{parent=normal text,bg=black!95}
-\setbeamercolor{block title alerted}{parent=alerted text,bg=black!95}
-\setbeamercolor{block title example}{parent=example text,bg=black!95}
+\setbeamercolor{block body}{fg=beamer@ccgreen}
+\setbeamercolor{block body alerted}{fg=red!60}
+\setbeamercolor{block body example}{}
+\setbeamercolor{block title}{parent=structure}
+\setbeamercolor{block title alerted}{parent=alerted text}
+\setbeamercolor{block title example}{parent=example text}
 
 \setbeamercolor{item}{parent=local structure}
 \setbeamercolor{subitem}{parent=item}
@@ -134,7 +134,7 @@
 \setbeamercolor{enumerate subitem}{parent=subitem}
 \setbeamercolor{enumerate subsubitem}{parent=subsubitem}
 
-\setbeamercolor{itemize item}{parent=item}
+\setbeamercolor{itemize item}{fg=beamer@ccblue}
 \setbeamercolor{itemize subitem}{parent=subitem}
 \setbeamercolor{itemize subsubitem}{parent=subsubitem}
 
