@@ -1,7 +1,6 @@
 \documentclass{beamer}
 
 \usepackage{minted}
-
 \usetheme{codecentric}
 
 \renewcommand*{\insertdate}{January 26, 2017}
@@ -10,6 +9,8 @@
 \institute{codecentric AG}
 
 \title{Warm fluffy Interpreters}
+
+\usemintedstyle{trac}
 
 \begin{document}
 {
@@ -23,7 +24,6 @@
   \tableofcontents
 \end{frame}
 
-
 \section{Introduction}
 
 \begin{frame}
@@ -36,41 +36,114 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{What I Do}
+  \frametitle{What codecentric does}
   \begin{itemize}
-  \item codecentric is about being experts and sharing knowledge
+  \item codecentric is about being experts and sharing knowledge (\textbf{both}
+    is expected)
   \item we have many people being experts in different topics
-  \item Java (performance), Microservices w/o docker, Big Data, Scala,
+  \item Java (performance), Microservices w/o docker, Big Data, Scala, NoSQL,
     \ldots
   \item working model: 4 + 1
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What I Do}
+  \begin{itemize}
+  \item in university, I already was a fan of expressive programming
+    languages
+  \item mostly Haskell and Scala, due to love of FP
+  \item goal: don't spend the rest of my life writing Java
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What I Do}
+  \begin{center}
+    \includegraphics[width=0.7\textwidth]{pics/success.jpg}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What I Do}
+  \begin{itemize}
+  \item working for a customer in the online retail market
+  \item programming the backend for the webshop
+  \item doing Scala Trainings (Lightbend)
+  \item speaking at Scala conferences
+  \item from time to time: other trainings (e.g. git)
+  \end{itemize}
+  \vfill{}
+  \includegraphics[height=3mm]{pics/codecentric-logo.png}
+  \hfill{}
+  \includegraphics[height=3mm]{pics/lightbend}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Warm, Fluffy Interpreters}
+  \begin{itemize}
+  \item so what for today?
+  \item we will see yet another variation on interpreters using\ldots
+  \end{itemize}
+  \vspace{5mm}
+  \begin{minipage}{0.75\linewidth}
+    \begin{quote}
+      Simon Peyton Jones once commented that the biggest mistake Haskell
+      made was to call them ``monads'' instead of ``warm, fluffy things''.
+    \end{quote}
+  \end{minipage}
+  \begin{minipage}{25mm}
+    \includegraphics[width=2cm]{pics/spj-snow.jpg}
+  \end{minipage}
+  \vspace{5mm}
+  \begin{itemize}
+  \item but first: typeclasses
   \end{itemize}
 \end{frame}
 
 \section{Typeclasses}
 
 \begin{frame}
-  \frametitle{Typeclasses}
+  \frametitle{One Last Thing}
   \begin{itemize}
-  \item Design pattern coming from Haskell
-  \item Another form of ad-hoc polymorphism (Quiz?)
-  \item Can be encoded in Scala
+  \item typeclasses are not in Scala's standard library
+  \item by now several good FP libraries that provide typeclasses and
+    instances (Scalaz, cats, \ldots)
+  \item we will use ``cats'' \url{https://github.com/typelevel/cats}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
+  \frametitle{Typeclasses}
+  \includegraphics[height=10mm]{pics/haskell.png}
+  \vspace{3mm}
+  \begin{itemize}
+  \item design pattern coming from Haskell
+  \item another form of ad-hoc polymorphism
+  \item can be encoded in Scala using implicits
+  \item implicits: values / methods marker such that the compiler will
+    try to fill them in if required at call site (compile phase)
+  \end{itemize}
+  \begin{center}
+    \hfill{}
+    \includegraphics[height=10mm]{pics/smooth-spiral.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
   \frametitle{Typeclasses in Scala}
-  \begin{enumerate}
+  \begin{itemize}
   \item trait with at least one type parameter defining the available
     methods
   \item implicit value/def on supported types that define the
     behaviour
-  \item syntactic sugar via implicit class
-  \end{enumerate}
+  \item common but actually optional: syntactic sugar via implicit class
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{The Monoid Typeclass: Trait}
-\begin{minted}{scala}
+\begin{minted}[style=trac]{scala}
 trait Monoid[A] {
   def empty: A
   def combine(lhs: A, rhs: A): A
@@ -80,7 +153,7 @@ trait Monoid[A] {
 
 \begin{frame}[fragile]
   \frametitle{The Monoid Typeclass: Instance}
-\begin{minted}{scala}
+\begin{minted}[style=trac]{scala}
 object Monoid {
   def apply[A:Monoid]: Monoid[A] = implicitly
 
@@ -94,7 +167,7 @@ object Monoid {
 
 \begin{frame}[fragile]
   \frametitle{The Monoid Typeclass: Sugar}
-\begin{minted}{scala}
+\begin{minted}[style=trac]{scala}
 implicit class MonoidOps[A](self: A)(
   implicit M: Monoid[A]
 ) {
@@ -105,7 +178,7 @@ implicit class MonoidOps[A](self: A)(
 
 \begin{frame}[fragile]
   \frametitle{The Monoid Typeclass: Usage}
-\begin{minted}{scala}
+\begin{minted}[style=trac]{scala}
 scala> import Monoid._
 scala> 1 |+| 2
 res0: Int = 3
@@ -120,11 +193,48 @@ res2: Int = 42
 
 \begin{frame}
   \frametitle{Monads}
-  \begin{quote}
-    Simon Peyton Jones once commented that the biggest mistake
-    Haskell made was to call them ``monads'' instead of ``warm, fluffy
-    things''.
-  \end{quote}
+  \begin{itemize}
+  \item known in category theory
+  \item discovered in Haskell to handle effects
+  \item by now very common in FP and also found in Java, Scala, F\#
+    and others
+  \item for something to ``be a monad'' means to have a (lawful)
+    instance of the \texttt{Monad} typeclass
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Monad Typeclass}
+\begin{minted}[style=trac]{scala}
+trait Monad[F[_]] {
+  def pure[A](x: A): F[A]
+  def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B]
+}
+\end{minted}
+  \begin{itemize}
+  \item \texttt{pure}: wrap up a value in a context (boring)
+  \item \texttt{flatMap}: all about \textit{control flow}:
+    \begin{itemize}
+    \item get the \texttt{A} and pass it to \texttt{f}
+    \item how to get \texttt{A} is the instance's business
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Monad Instance For Option}
+\begin{minted}[style=trac]{scala}
+implicit val optionMonad: Monad[Option] = new Monad {
+  override def pure[A](x: A): Option[A] = Some(x)
+  override def flatMap[A,B](fa: Option[A])(
+    f: A => Option[B]): Option[B] = {
+      fa match {
+        case None => None
+        case Some(x) => f(x)
+      }
+  }
+}
+\end{minted}
 \end{frame}
 
 \section{Free Monads \& Interpreters}
@@ -132,22 +242,69 @@ res2: Int = 42
 \begin{frame}
   \frametitle{Free Monads}
   \begin{itemize}
-  \item<1> Idea: strip away any semantics, only keep the AST
-  \item<1> Quiz: what nodes do we have for monads? (what operations?)
+  \item<1-> ``Free X'' for X in \{Monad, Functor, Monoid, \dots\}
+  \item<1-> Idea: strip away any semantics, only keep the AST
+  \item<1-> Quiz: what nodes do we have for monads? (what operations?)
   \item<2> pure \& flatMap
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Free Monads}
+\begin{minted}[style=trac]{scala}
+trait Monad[F[_]] {
+  def pure[A](x: A): F[A]
+  def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B]
+}
+
+sealed trait Free[F[_], A]
+
+final case class Pure[F[_], A](x: A)
+  extends Free[F, A]
+
+final case class FlatMap[F[_], A](k: F[Free[F, A]])
+  extends Free[F, A]
+\end{minted}
 \end{frame}
 
 \begin{frame}
   \frametitle{Essence of Free Monads}
   \begin{itemize}
-  \item build the AST via normal map/flatMap/pure operations
+  \item known from the current course: build AST, interpret it
+  \item up until now: very clumsy syntax
+  \item free monads is just another variation of a familiar theme
+  \item \textbf{build} the AST via normal map/flatMap/pure operations
   \item \textbf{interpret} the resulting program via interpreter
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Applying Free Monads}
+  \begin{center}
+    \includegraphics[height=5cm]{pics/free-monad-all.jpg}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Applying Free Monads}
+\begin{minted}[style=trac]{scala}
+sealed trait SimpleAlgebra[A]
+
+case class Plus(x: Int, y: Int)
+  extends SimpleAlgebra[Int]
+case class Mult(x: Int, y: Int)
+  extends SimpleAlgebra[Int]
+
+def plus(x: Int, y: Int): Free[SimpleAlgebra, Int] =
+  Free.liftF(Plus(x,y))
+
+def mult(x: Int, y: Int): Free[SimpleAlgebra, Int] =
+  Free.liftF(Mult(x,y))
+\end{minted}
+\end{frame}
+
+\begin{frame}
+  \frametitle{A More Realistic Scenario}
   \begin{itemize}
   \item Szenario: Our program interacts with Database
   \item<1> for testing we want to stub it
@@ -164,10 +321,10 @@ res2: Int = 42
 
 \begin{frame}[fragile]
   \frametitle{Our Program}
-\begin{minted}{scala}
-def addItem(itemId: ItemId, uid: UserId) = for {
-  item <- loadItem(itemId)
-  cart <- loadCart(uid)
+\begin{minted}[style=trac]{scala}
+def addItem(iid: ItemId, cid: CartId) = for {
+  item <- loadItem(iid)
+  cart <- loadCart(cid)
   newCart = cart.add(item)
   r <- saveCart(newCart)
 } yield r
@@ -178,10 +335,6 @@ def addItem(itemId: ItemId, uid: UserId) = for {
 
 \begin{frame}
   \frametitle{Conclusion}
-  \begin{description}
-  \item[First description] This concludes the example presentation
-  \item[Second description] Go forth and create beautiful presentations!
-  \end{description}
 \end{frame}
 
 \end{document}
