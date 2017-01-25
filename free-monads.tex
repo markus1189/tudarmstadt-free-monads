@@ -288,18 +288,57 @@ final case class FlatMap[F[_], A](k: F[Free[F, A]])
 \begin{frame}[fragile]
   \frametitle{Applying Free Monads}
 \begin{minted}[style=trac]{scala}
-sealed trait SimpleAlgebra[A]
+  sealed trait SimpleAlgebra[A]
 
-case class Plus(x: Int, y: Int)
-  extends SimpleAlgebra[Int]
-case class Mult(x: Int, y: Int)
-  extends SimpleAlgebra[Int]
+  case class Plus(x: Int, y: Int)
+    extends SimpleAlgebra[Int]
+  case class Mult(x: Int, y: Int)
+    extends SimpleAlgebra[Int]
 
-def plus(x: Int, y: Int): Free[SimpleAlgebra, Int] =
-  Free.liftF(Plus(x,y))
+  def plus(x: Int, y: Int): Free[SimpleAlgebra, Int] =
+    Free.liftF(Plus(x,y))
 
-def mult(x: Int, y: Int): Free[SimpleAlgebra, Int] =
-  Free.liftF(Mult(x,y))
+  def mult(x: Int, y: Int): Free[SimpleAlgebra, Int] =
+    Free.liftF(Mult(x,y))
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Applying Free Monads}
+\begin{minted}[style=trac]{scala}
+  val program: Free[SimpleAlgebra, Int] = for {
+    one <- Free.pure(1)
+    two <- plus(1,1)
+    ten <- Free.pure(10)
+    twenty <- mult(ten,two)
+    forty <- mult(two,twenty)
+    result <- plus(forty,two)
+  } yield result
+\end{minted}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreting Programs}
+  \begin{itemize}
+  \item up until now we are only building up our AST involving
+    \texttt{FlatMap} and \texttt{Pure} nodes
+  \item an interpreter is a \texttt{natural transformation}
+    (polymorphic lambda)
+  \item in cats this is denoted as \texttt{F ~> G}, where \texttt{F}
+    and \texttt{G} are higher kinded type constructors taking 1 arg
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Interpreting Programs}
+\begin{minted}[style=trac]{scala}
+val interpreter = new (SimpleAlgebra ~> Id) {
+  override def apply[A](fa: SimpleAlgebra[A]): Id[A] =
+  fa match {
+      case Plus(x,y) => x + y
+      case Mult(x,y) => x * y
+    }
+}
 \end{minted}
 \end{frame}
 
@@ -331,10 +370,43 @@ def addItem(iid: ItemId, cid: CartId) = for {
 \end{minted}
 \end{frame}
 
+\begin{frame}
+  \begin{center}
+    \Huge
+    Coding
+  \end{center}
+
+\end{frame}
+
 \section{Conclusion}
 
 \begin{frame}
   \frametitle{Conclusion}
+  \begin{itemize}
+  \item powerful pattern:
+    \begin{itemize}
+    \item DSL to build programs
+    \item different interpreters
+    \end{itemize}
+  \item even useful in production!
+  \end{itemize}
 \end{frame}
+
+{
+  \usebackgroundtemplate{\includegraphics[width=\paperwidth,height=\paperheight]{background.png}}
+  \begin{frame}[plain,noframenumbering]
+    \begin{center}
+      \vspace{1cm}
+      {\Huge
+        Questions?} \\
+      \vspace{1cm}
+      \includegraphics[height=3mm]{pics/codecentric-logo} \\
+      \vspace{1cm}
+      Markus Hauck (@markus1189)
+    \end{center}
+
+  \end{frame}
+}
+
 
 \end{document}
