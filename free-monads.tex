@@ -1,5 +1,9 @@
 \documentclass{beamer}
 
+\usepackage[ngerman,british]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
 \usepackage{minted}
 \usetheme{codecentric}
 
@@ -8,7 +12,7 @@
 \author{Markus Hauck}
 \institute{codecentric AG}
 
-\title{Warm fluffy Interpreters}
+\title{Warm Fluffy Interpreters}
 
 \usemintedstyle{trac}
 
@@ -32,15 +36,17 @@
   \item two years ago, I was sitting in COPL just like you
   \item finished my master at TU Darmstadt October 2015
   \item started to work at codecentric as IT Consultant
+  \item btw, titles don't really have a meaning you can also be
+    ``Bleeding Edge IT Rockstar''
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{codecentric}
   \begin{itemize}
-  \item 16 offices in Germany
+  \item 16 office in Germany, Netherlands, Serbia
   \item headquarter in Solingen
-  \item also \texttt{Frankfurt}, Berlin, Dortmund, Düsseldorf,
+  \item also \textbf{Frankfurt}, Berlin, Dortmund, Düsseldorf,
     Hamburg, Karlsruhe, München, Münster, Nürnberg, Stuttgart
   \end{itemize}
 \end{frame}
@@ -82,7 +88,7 @@
   \item programming the backend for the webshop
   \item doing Scala Trainings (Lightbend)
   \item speaking at Scala conferences
-  \item from time to time: other trainings (e.g. git)
+  \item from time to time: other trainings
   \end{itemize}
   \vfill{}
   \includegraphics[height=3mm]{pics/codecentric-logo.png}
@@ -94,6 +100,7 @@
   \frametitle{Warm, Fluffy Interpreters}
   \begin{itemize}
   \item so what for today?
+  \item this course: (build AST) + interpret programs
   \item we will see yet another variation on interpreters using\ldots
   \end{itemize}
   \vspace{5mm}
@@ -204,6 +211,9 @@ res2: Int = 42
 
 \begin{frame}
   \frametitle{Monads}
+  \begin{center}
+    \includegraphics[height=15mm]{pics/strong-monads.png}
+  \end{center}
   \begin{itemize}
   \item known in category theory
   \item discovered in Haskell to handle effects
